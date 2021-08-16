@@ -201,11 +201,38 @@ class mauticipn {
         return($j_result);
     }
     /*********************************************************/
+    public function mautic_send_data_to_mautic_form($YourArray){
+    /*********************************************************/
+        $YourArray['ip'] =  $_SERVER['REMOTE_ADDR'];
+        
+        $url = "https://".$this->un.":".$this->pw."@".$this->url."/form/submit?formId=". $YourArray['formId'];
+        $data = array('mauticform' => $YourArray);
+        $data = http_build_query($data);
+        $ch = curl_init();
+        
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mautic Connector');
+        $response = curl_exec($ch);
+     //   var_dump(curl_getinfo($ch));
+        if(curl_exec($ch) === false)
+        {
+            echo " | ";
+            echo 'Curl error: ' . curl_error($ch);
+        }
+        curl_close($ch);
+    }
+    /*********************************************************/
     public function mautic_add_user_and_segment($YourArray){
         /*********************************************************/
         $user_data = $this->mautic_check_if_email_exists($YourArray);
         $segement_data = $this->mautic_check_if_segment_exists($YourArray);
         $this->mautic_add_segment_to_user($user_data,$segement_data);
+        if(isset($YourArray['formId'])){
+            $this->mautic_send_data_to_mautic_form($YourArray);
+        }
     }
     
     
@@ -229,9 +256,9 @@ class mauticipn {
     /*********************************************************/
 } //end of class
 /*********************************************************/
+
 $mauticipn = new mauticipn();
 $mauticipn->mautic_start($mauticcfg);
-
 
 
 ?>

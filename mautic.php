@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Plugin Name:       CF7 to Mautic
  * Description:       The plugin sends CF7 submissions to Mautic.
- * Version:           0.2
+ * Version:           0.4
  * Author:            DASAT UG
  * Author URI:        http://dasat.com/
  * License:           GPL-2.0+
@@ -53,26 +53,49 @@ function mautic_plugin_options($dummy) {
  $mautic_content = '
     <div style="font-size:1.2em;line-height:2em">
     <h1>CF7 to Mautic</h1><br>
-    Dieses einfache Plugin erlaubt es Daten, die über ein CF7 Formular geschickt werden, in Mautic einzubinden. Es werden ein Benutzer und ein Segment angelegt, sollten der Benutzer oder das Segment in Mautic noch nicht vorhanden sein, und fügt zum Benutzer das gewünschte Segment hinzu, falls dieses mit dem Benutzer noch nicht verknüpft sein sollte.<p>
+    Dieses einfache Plugin erlaubt es Daten, die über ein CF7 Formular geschickt werden, in Mautic einzubinden. Es werden ein Benutzer und ein Segment angelegt, sollten der Benutzer oder das Segment in Mautic noch nicht vorhanden sein, und fügt zum Benutzer das gewünschte Segment hinzu, falls dieses mit dem Benutzer noch nicht verknüpft sein sollte.<br>
+Das Plugin übermittelt auch Daten an ein Mautic Formular.
             
-    <h2>Anbindung an Mautic</h2>
     <ul>
-    <li>Erstelle einen Benutzer in Mautic mit der Rolle MailsenderIPN</li>
-    <li>Trage Deine Mautic-URL, den Benutzernamen und das Passwort in die wp-config.php bei WordPress ein. (Wird Deine Datenbank gehacked, sind die Mautic-Zugangsdaten nicht erkennbar)<br>
-    define(\'MAUTICURL\', \'mauticurl\'); <strong>KEIN https am Anfang! Should NOT start with https!</strong><br>
-    define(\'MAUTICUN\', \'mauticIPNUser\');<br>
-    define(\'MAUTICPW\', \'mauticIPNPassword\');<br>
+    <li style="border:1px solid blue;padding:10px;">
+
+    <h2>CF7 ANBINDUNG AN MAUTIC / CONNECT CF7 WITH MAUTIC (required)</h2>
+
+
+Erstelle einen Benutzer in Mautic mit der Rolle MailsenderIPN.<br>
+    Trage Deine Mautic-URL, den Benutzernamen und das Passwort in die wp-config.php bei WordPress ein. (Wird Deine Datenbank gehacked, sind die Mautic-Zugangsdaten nicht erkennbar)<br>
+    <xmp style="margin:0px;">define(\'MAUTICURL\', \'mauticurl\'); // KEIN https am Anfang! Should NOT start with https!
+define(\'MAUTICUN\', \'mauticIPNUser\');
+define(\'MAUTICPW\', \'mauticIPNPassword\');</xmp>
     </li>
         
-    <li>Erstelle wie gewohnt Dein Formular mit CF7 und verwende die Mautic-Feldnamen<br>
-    Your email (required) [text* your-email] <strong>oder</strong> Your email (required) [text* email]<br>
-    
-    Your firstname (required) [text* your-firstname] <strong>oder</strong> Your firstname (required) [text* firstname]<br>
-    Your lasttname (required) [text* your-lastname] <strong>oder</strong> Your lasttname (required) [text* lastname]<br>
+   
+        <li style="border:1px solid blue;padding:10px;">
+    <h2>MAUTIC SEGMENT IN CF7 (required)</h2>
+
+    Füge den Namen des <b>Segments</b> ein, welches mit dem Formular verbunden werden soll<br>
+    <xmp style="margin:0px;">[hidden segment"whateversegment"]</xmp>
     </li>
-    <li>
-    Füge den Namen des Segments ein, welches mit dem Formular verbunden werden soll<br>
-    [hidden segment"whateversegment"]
+    <li style="border:1px solid blue;padding:10px;">
+    <h2>MAUTIC FORM SUBMISSION (optional)</h2>
+
+    Füge die ID des Mautic-Formulars ein, welche die Daten erhalten soll Bsp. [hidden formId"16"]<br>
+    Wenn die Daten in ein Mautic-Formular geschickt werden sollen, müssen die Feldnamen im CF7-Formular identisch mit den Feldnamen sein, die Du im Mautic-Forumular verwendet hast.<br>
+    Falls Du Dir unsicher bist, welche Namen die Felder haben, schaue Dir unter "Manual Copy" bei Mautic die Feldnamen an.<br>
+<b>Mautic Form & CF7</b><br>
+<xmp style="margin:0px;"><input id="mauticform_input_demo_email" name="mauticform[email]" value="" class="mauticform-input" type="email">
+<input id="mauticform_input_demo_lastname" name="mauticform[lastname]" value="" class="mauticform-input" type="text">
+<textarea id="mauticform_input_demo_f_message" name="mauticform[f_message]" class="mauticform-textarea"></textarea>
+</xmp>
+<hr>
+<b>CF7</b><br>
+<xmp style="margin:0px;"><label> Email (required)[email* your-email] </label>
+<label> Lastname [text your-lastname] </label>
+<label> Your Message? [textarea your-f_message] </label>
+[hidden formId"16"]
+[hidden segment"whateversegment"]
+
+</xmp>
     </li>
     </ul>
         
